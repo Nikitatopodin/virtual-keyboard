@@ -1,0 +1,106 @@
+/*Обнуление*/
+* {
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+
+*,
+*:before,
+*:after {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+:focus,
+:active {
+	outline: none;
+}
+
+a:focus,
+a:active {
+	outline: none;
+}
+
+nav,
+footer,
+header,
+aside {
+	display: block;
+}
+
+html,
+body {
+	height: 100%;
+	width: 100%;
+	font-size: 100%;
+	line-height: 1;
+	font-size: 16px;
+	-ms-text-size-adjust: 100%;
+	-moz-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%;
+	scroll-behavior: smooth;
+}
+
+input,
+button,
+textarea {
+	font-family: inherit;
+}
+
+input::-ms-clear {
+	display: none;
+}
+
+button {
+	cursor: pointer;
+}
+
+button::-moz-focus-inner {
+	padding: 0;
+	border: 0;
+}
+
+img {
+	vertical-align: top;
+}
+
+/*********/
+
+.wrapper {
+	margin: 0 auto;
+	max-width: 900px;
+	text-align: center;
+	background: rgb(184, 198, 223);
+	background: -moz-radial-gradient(center, ellipse cover, rgba(184, 198, 223, 1) 0%, rgba(109, 136, 183, 1) 100%);
+	background: -webkit-radial-gradient(center, ellipse cover, rgba(184, 198, 223, 1) 0%, rgba(109, 136, 183, 1) 100%);
+	background: radial-gradient(ellipse at center, rgba(184, 198, 223, 1) 0%, rgba(109, 136, 183, 1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#b8c6df', endColorstr='#6d88b7', GradientType=1);
+}
+
+.keyboard {
+	padding: 10px 0;
+	max-width: 100%;
+}
+
+.keyboard__key {
+	font-size: 18px;
+	margin: 2px;
+	height: 45px;
+	width: 6%;
+	transition: all 0.1s;
+}
+
+.keyboard__key_active {
+	transform: scale(0.9);
+	background-color: aqua;
+}
+
+.keyboard__key_wide {
+	width: 12%;
+}
+
+.keyboard__key_space {
+	width: 38%;
+}
