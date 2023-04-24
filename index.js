@@ -67,6 +67,7 @@ class Keyboard {
 
         keyBtn.addEventListener('click', () => {
           this.props.value += ' ';
+          this.props.textArea.value = this.props.value;
         });
       } else if (key === 'CapsLock') {
         keyBtn.addEventListener('click', () => {
@@ -75,21 +76,23 @@ class Keyboard {
       } else if (key === 'Backspace') {
         keyBtn.addEventListener('click', () => {
           this.props.value = this.props.value.substring(0, this.props.value.length - 1);
+          this.props.textArea.value = this.props.value;
         });
       } else if (key === 'Enter') {
         keyBtn.addEventListener('click', () => {
           this.props.value += '\n';
+          this.props.textArea.value = this.props.value;
         });
       } else {
-        // TODO: Make mouse events with event delegation to fix bugs
         keyBtn.classList.add(`Key${key.toUpperCase()}`);
 
         keyBtn.addEventListener('mousedown', () => {
           this.props.value += this.props.capsLock ? key.toUpperCase() : key.toLowerCase();
           keyBtn.classList.add('keyboard__key_active');
+          this.props.textArea.value = this.props.value;
         });
 
-        keyBtn.addEventListener('mouseup', () => {
+        this.props.board.addEventListener('mouseup', () => {
           const keyBtns = document.querySelectorAll('.keyboard__key');
           keyBtns.forEach((keyElem) => {
             keyElem.classList.remove('keyboard__key_active');
@@ -101,11 +104,12 @@ class Keyboard {
           keyBtns.forEach((keyElem) => {
             if (keyElem.classList.contains(e.code)) {
               if (this.props.capsLock) {
-                keyElem.textContent.toUpperCase();
+                this.props.value += keyElem.textContent.toUpperCase();
               } else {
                 this.props.value += keyElem.textContent.toLowerCase();
               }
               keyElem.classList.add('keyboard__key_active');
+              this.props.textArea.value = this.props.value;
             }
           });
         });
