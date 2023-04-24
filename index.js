@@ -6,6 +6,8 @@ class Keyboard {
     keys: [],
     capsLock: false,
     value: '',
+    shiftLeft: false,
+    shiftRight: false,
   };
 
   eventHanlders = {
@@ -24,6 +26,10 @@ class Keyboard {
     document.body.append(this.props.textArea);
     document.body.append(this.props.wrapper);
     this.props.wrapper.append(this.props.board);
+
+    document.addEventListener('keydown', (e) => {
+      e.preventDefault();
+    });
   }
 
   createKeys() {
@@ -32,7 +38,7 @@ class Keyboard {
       'Tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\',
       'CapsLock', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', "'", 'Enter',
       'Shift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', 'up', 'Shift',
-      'Ctrl', 'Win', 'Alt', 'Spacebar', 'Alt', 'Ctrl', 'left', 'down', 'right', 'DEL',
+      'Ctrl', 'Win', 'Alt', 'Space', 'Alt', 'Ctrl', 'left', 'down', 'right', 'DEL',
     ];
 
     const edgeKeys = ['Backspace', '\\', 'Enter', 'Shift'];
@@ -62,27 +68,66 @@ class Keyboard {
       }
 
       // Special cases
-      if (key === 'Spacebar') {
-        keyBtn.classList.add('keyboard__key_space');
+      if (key === 'Space') {
+        keyBtn.classList.add('keyboard__key_space', 'Space');
 
-        keyBtn.addEventListener('click', () => {
+        keyBtn.addEventListener('mousedown', () => {
+          keyBtn.classList.add('keyboard__key_active');
           this.props.value += ' ';
           this.props.textArea.value = this.props.value;
         });
-      } else if (key === 'CapsLock') {
-        keyBtn.addEventListener('click', () => {
-          this.toggleCapsLock();
+
+        keyBtn.addEventListener('mouseup', () => {
+          keyBtn.classList.remove('keyboard__key_active');
         });
+
+        keyBtn.addEventListener('keydown', (e) => this.downKey(e));
+        keyBtn.addEventListener('keyup', (e) => this.upKey(e));
+      } else if (key === 'CapsLock') {
+        keyBtn.classList.add(key);
+
+        keyBtn.addEventListener('mousedown', () => {
+          this.toggleCapsLock();
+          keyBtn.classList.toggle('keyboard__key_active', this.props.capsLock);
+        });
+
+        keyBtn.addEventListener('keydown', (e) => this.downKey(e));
+        keyBtn.addEventListener('keyup', (e) => this.upKey(e));
       } else if (key === 'Backspace') {
-        keyBtn.addEventListener('click', () => {
+        keyBtn.addEventListener('mousedown', () => {
           this.props.value = this.props.value.substring(0, this.props.value.length - 1);
           this.props.textArea.value = this.props.value;
         });
       } else if (key === 'Enter') {
-        keyBtn.addEventListener('click', () => {
+        keyBtn.classList.add(key);
+
+        keyBtn.addEventListener('mousedown', () => {
+          keyBtn.classList.add('keyboard__key_active');
           this.props.value += '\n';
           this.props.textArea.value = this.props.value;
         });
+
+        keyBtn.addEventListener('mouseup', () => {
+          keyBtn.classList.remove('keyboard__key_active');
+        });
+
+        keyBtn.addEventListener('keydown', (e) => this.downKey(e));
+        keyBtn.addEventListener('keyup', (e) => this.upKey(e));
+      } else if (key === 'Tab') {
+        keyBtn.classList.add(key);
+
+        keyBtn.addEventListener('mousedown', () => {
+          keyBtn.classList.add('keyboard__key_active');
+          this.props.value += '  ';
+          this.props.textArea.value = this.props.value;
+        });
+
+        keyBtn.addEventListener('mouseup', () => {
+          keyBtn.classList.remove('keyboard__key_active');
+        });
+
+        keyBtn.addEventListener('keydown', (e) => this.downKey(e));
+        keyBtn.addEventListener('keyup', (e) => this.upKey(e));
       } else {
         keyBtn.classList.add(`Key${key.toUpperCase()}`);
 
@@ -94,38 +139,64 @@ class Keyboard {
 
         this.props.board.addEventListener('mouseup', () => {
           const keyBtns = document.querySelectorAll('.keyboard__key');
-          keyBtns.forEach((keyElem) => {
-            keyElem.classList.remove('keyboard__key_active');
-          });
-        });
 
-        keyBtn.addEventListener('keydown', (e) => {
-          const keyBtns = document.querySelectorAll('.keyboard__key');
           keyBtns.forEach((keyElem) => {
-            if (keyElem.classList.contains(e.code)) {
-              if (this.props.capsLock) {
-                this.props.value += keyElem.textContent.toUpperCase();
-              } else {
-                this.props.value += keyElem.textContent.toLowerCase();
-              }
-              keyElem.classList.add('keyboard__key_active');
-              this.props.textArea.value = this.props.value;
+            if (keyElem.classList.contains(`Key${keyElem.textContent[0].toUpperCase()}`)) {
+              keyElem.classList.remove('keyboard__key_active');
             }
           });
         });
-        // TODO: remake this one
-        keyBtn.addEventListener('keyup', () => {
-          const keyBtns = document.querySelectorAll('.keyboard__key');
-          keyBtns.forEach((keyElem) => {
-            keyElem.classList.remove('keyboard__key_active');
-          });
-        });
+
+        keyBtn.addEventListener('keydown', (e) => this.downKey(e));
+        keyBtn.addEventListener('keyup', (e) => this.upKey(e));
       }
     });
   }
 
   toggleCapsLock() {
     this.props.capsLock = !this.props.capsLock;
+  }
+
+  downKey(e) {
+    const keyBtns = document.querySelectorAll('.keyboard__key');
+    keyBtns.forEach((keyElem) => {
+      if (keyElem.classList.contains(e.code)) {
+        if (keyElem.textContent === 'CapsLock') {
+          this.toggleCapsLock();
+          keyElem.classList.toggle('keyboard__key_active', this.props.capsLock);
+        } else if (keyElem.textContent === 'Space') {
+          this.props.value += ' ';
+          keyElem.classList.add('keyboard__key_active');
+        } else if (keyElem.textContent === 'Enter') {
+          this.props.value += '\n';
+          keyElem.classList.add('keyboard__key_active');
+        } else if (keyElem.textContent === 'Tab') {
+          this.props.value += '  ';
+          keyElem.classList.add('keyboard__key_active');
+        } else {
+          if (this.props.capsLock) {
+            this.props.value += keyElem.textContent.toUpperCase();
+          } else {
+            this.props.value += keyElem.textContent.toLowerCase();
+          }
+          keyElem.classList.add('keyboard__key_active');
+        }
+      }
+    });
+    this.props.textArea.value = this.props.value;
+  }
+
+  upKey(e) {
+    const keyBtns = document.querySelectorAll('.keyboard__key');
+    keyBtns.forEach((keyElem) => {
+      if (keyElem.classList.contains(e.code)) {
+        if (keyElem.textContent === 'CapsLock') {
+          keyElem.classList.toggle('keyboard__key_active', this.props.capsLock);
+        } else {
+          keyElem.classList.remove('keyboard__key_active');
+        }
+      }
+    });
   }
 }
 
