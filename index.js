@@ -247,6 +247,20 @@ class Keyboard {
 
   toggleCapsLock() {
     this.props.capsLock = !this.props.capsLock;
+
+    const keyBtns = document.querySelectorAll('.keyboard__key');
+
+    keyBtns.forEach((k) => {
+      if (this.props.capsLock) {
+        if (k.textContent.length === 1) {
+          k.textContent = k.textContent.toUpperCase();
+        }
+      } else if (!this.props.capsLock) {
+        if (k.textContent.length === 1) {
+          k.textContent = k.textContent.toLowerCase();
+        }
+      }
+    });
   }
 
   toggleShift() {
