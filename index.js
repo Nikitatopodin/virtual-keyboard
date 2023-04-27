@@ -6,6 +6,7 @@ class Keyboard {
     capsLock: false,
     value: '',
     shift: false,
+    language: 'rus',
   };
 
   eventHanlders = {
@@ -31,9 +32,9 @@ class Keyboard {
   }
 
   createKeys() {
-    const keysObj = {
+    const keyObjEng = {
       Backquote: '`',
-      Digit1: '!',
+      Digit1: '1',
       Digit2: '2',
       Digit3: '3',
       Digit4: '4',
@@ -97,7 +98,75 @@ class Keyboard {
       ArrowRight: 'right',
       Delete: 'DEL',
     };
-    const keys = Object.entries(keysObj);
+
+    const keyObjRus = {
+      Backquote: 'ё',
+      Digit1: '1',
+      Digit2: '2',
+      Digit3: '3',
+      Digit4: '4',
+      Digit5: '5',
+      Digit6: '6',
+      Digit7: '7',
+      Digit8: '8',
+      Digit9: '9',
+      Digit0: '0',
+      Minus: '-',
+      Equal: '=',
+      Backspace: 'Backspace',
+      Tab: 'Tab',
+      KeyQ: 'й',
+      KeyW: 'ц',
+      KeyE: 'у',
+      KeyR: 'к',
+      KeyT: 'е',
+      KeyY: 'н',
+      KeyU: 'г',
+      KeyI: 'ш',
+      KeyO: 'щ',
+      KeyP: 'з',
+      BracketLeft: 'х',
+      BracketRight: 'ъ',
+      Backslash: '\\',
+      CapsLock: 'CapsLock',
+      KeyA: 'ф',
+      KeyS: 'ы',
+      KeyD: 'в',
+      KeyF: 'а',
+      KeyG: 'п',
+      KeyH: 'р',
+      KeyJ: 'о',
+      KeyK: 'л',
+      KeyL: 'д',
+      Semicolon: 'ж',
+      Quote: 'э',
+      Enter: 'Enter',
+      ShiftLeft: 'Shift',
+      KeyZ: 'я',
+      KeyX: 'ч',
+      KeyC: 'с',
+      KeyV: 'м',
+      KeyB: 'и',
+      KeyN: 'т',
+      KeyM: 'ь',
+      Comma: 'б',
+      Period: 'ю',
+      Slash: '.',
+      ArrowUp: 'up',
+      ShiftRight: 'Shift',
+      ControlLeft: 'Ctrl',
+      MetaLeft: 'Win',
+      AltLeft: 'Alt',
+      Space: 'Space',
+      AltRight: 'Alt',
+      ControlRight: 'Ctrl',
+      ArrowLeft: 'left',
+      ArrowDown: 'down',
+      ArrowRight: 'right',
+      Delete: 'DEL',
+    };
+
+    const keys = this.props.language === 'eng' ? Object.entries(keyObjEng) : Object.entries(keyObjRus);
     const edgeKeys = ['Backspace', '\\', 'Enter', 'Shift'];
     const wideKeys = ['CapsLock', 'Enter', 'Shift', 'Backspace', 'Tab'];
 
@@ -251,36 +320,43 @@ class Keyboard {
     const keyBtns = document.querySelectorAll('.keyboard__key');
 
     keyBtns.forEach((k) => {
+      const kCopy = k;
       if (this.props.capsLock) {
         if (k.textContent.length === 1) {
-          k.textContent = k.textContent.toUpperCase();
+          kCopy.textContent = k.textContent.toUpperCase();
         }
       } else if (!this.props.capsLock) {
         if (k.textContent.length === 1) {
-          k.textContent = k.textContent.toLowerCase();
+          kCopy.textContent = k.textContent.toLowerCase();
         }
       }
     });
   }
 
   toggleShift() {
-    const nonShiftSpecialKeys = ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '[', ']', '\\', ';', "'", ',', '.', '/'];
-    const shiftSpecialKeys = ['~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '{', '}', '|', ':', '"', '<', '>', '?'];
+    const nonShiftSpecialKeysEng = ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '[', ']', '\\', ';', "'", ',', '.', '/'];
+    const shiftSpecialKeysEng = ['~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '{', '}', '|', ':', '"', '<', '>', '?'];
+    const nonShiftSpecialKeysRus = ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'х', 'ъ', '\\', 'ж', 'э', 'б', 'ю', '.'];
+    const shiftSpecialKeysRus = ['Ё', '!', '"', '№', ';', '%', ':', '?', '*', '(', ')', '_', '+', 'Х', 'Ъ', '/', 'Ж', 'Э', 'Б', 'Ю', ','];
     const keyBtns = document.querySelectorAll('.keyboard__key');
 
+    const shiftSpecialKeys = this.props.language === 'eng' ? shiftSpecialKeysEng : shiftSpecialKeysRus;
+    const nonShiftSpecialKeys = this.props.language === 'eng' ? nonShiftSpecialKeysEng : nonShiftSpecialKeysRus;
+
     keyBtns.forEach((k) => {
+      const kCopy = k;
       if (this.props.shift) {
         if (k.textContent.length === 1) {
-          k.textContent = k.textContent.toUpperCase();
+          kCopy.textContent = k.textContent.toUpperCase();
           if (nonShiftSpecialKeys.indexOf(k.textContent) !== -1) {
-            k.textContent = shiftSpecialKeys[nonShiftSpecialKeys.indexOf(k.textContent)];
+            kCopy.textContent = shiftSpecialKeys[nonShiftSpecialKeys.indexOf(k.textContent)];
           }
         }
       } else if (!this.props.shift) {
         if (k.textContent.length === 1) {
-          k.textContent = k.textContent.toLowerCase();
+          kCopy.textContent = k.textContent.toLowerCase();
           if (shiftSpecialKeys.indexOf(k.textContent) !== -1) {
-            k.textContent = nonShiftSpecialKeys[shiftSpecialKeys.indexOf(k.textContent)];
+            kCopy.textContent = nonShiftSpecialKeys[shiftSpecialKeys.indexOf(k.textContent)];
           }
         }
       }
