@@ -99,4 +99,28 @@ img {
 
 .keyboard__key_space {
   width: 38%;
+}
+
+.ArrowUp {
+  background-image: url("./assets/svg/arrow-up.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.ArrowLeft {
+  background-image: url("./assets/svg/arrow-left.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.ArrowRight {
+  background-image: url("./assets/svg/arrow-right.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.ArrowDown {
+  background-image: url("./assets/svg/arrow-down.svg");
+  background-repeat: no-repeat;
+  background-position: center;
 }/*# sourceMappingURL=style.css.map */

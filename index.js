@@ -85,7 +85,7 @@ class Keyboard {
       Comma: ',',
       Period: '.',
       Slash: '/',
-      ArrowUp: 'up',
+      ArrowUp: '',
       ShiftRight: 'Shift',
       ControlLeft: 'Ctrl',
       MetaLeft: 'Win',
@@ -93,9 +93,9 @@ class Keyboard {
       Space: 'Space',
       AltRight: 'Alt',
       ControlRight: 'Ctrl',
-      ArrowLeft: 'left',
-      ArrowDown: 'down',
-      ArrowRight: 'right',
+      ArrowLeft: '',
+      ArrowDown: '',
+      ArrowRight: '',
       Delete: 'DEL',
     };
 
@@ -152,7 +152,7 @@ class Keyboard {
       Comma: 'б',
       Period: 'ю',
       Slash: '.',
-      ArrowUp: 'up',
+      ArrowUp: '',
       ShiftRight: 'Shift',
       ControlLeft: 'Ctrl',
       MetaLeft: 'Win',
@@ -160,9 +160,9 @@ class Keyboard {
       Space: 'Space',
       AltRight: 'Alt',
       ControlRight: 'Ctrl',
-      ArrowLeft: 'left',
-      ArrowDown: 'down',
-      ArrowRight: 'right',
+      ArrowLeft: '',
+      ArrowDown: '',
+      ArrowRight: '',
       Delete: 'DEL',
     };
 
@@ -279,7 +279,7 @@ class Keyboard {
         keyBtn.addEventListener('keydown', (e) => this.downKey(e));
         keyBtn.addEventListener('keyup', (e) => this.upKey(e));
       } else if (keyValue.length > 1) {
-        keyBtn.classList.add(keyCode);
+        keyBtn.classList.add(keyCode, 'arrow');
 
         keyBtn.addEventListener('mousedown', () => {
           keyBtn.classList.add('keyboard__key_active');
