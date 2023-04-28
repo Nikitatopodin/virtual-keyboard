@@ -7,6 +7,8 @@ class Keyboard {
     value: '',
     shift: false,
     language: 'eng',
+    selectionStart: 0,
+    selectionEnd: 0,
   };
 
   eventHanlders = {
@@ -17,6 +19,9 @@ class Keyboard {
 
   constructor() {
     this.props.textArea = document.createElement('textarea');
+    this.props.textArea.classList.add('textarea');
+    this.props.textArea.rows = 10;
+    this.props.textArea.cols = 100;
     this.props.wrapper = document.createElement('div');
     this.props.wrapper.classList.add('wrapper');
     this.props.board = document.createElement('div');
@@ -28,12 +33,20 @@ class Keyboard {
 
     this.props.textArea.autofocus = true;
     this.props.textArea.focus();
+    this.props.selectionStart = this.props.textArea.selectionStart;
+    this.props.selectionEnd = this.props.textArea.selectionEnd;
 
     document.addEventListener('keydown', (e) => e.preventDefault());
     document.addEventListener('keyup', (e) => this.upKey(e.code));
     document.addEventListener('keydown', (e) => this.downKey(e.code));
     document.addEventListener('mousedown', (e) => this.downKey(e.target.classList[1]));
     document.addEventListener('mouseup', (e) => this.upKey(e.target.classList[1], true));
+    this.props.textArea.addEventListener('click', (e) => {
+      this.props.selectionEnd = e.target.selectionEnd;
+      this.props.textArea.selectionStart = this.props.selectionEnd;
+      this.props.selectionStart = e.target.selectionStart;
+      this.props.textArea.selectionEnd = this.props.selectionStart;
+    });
   }
 
   createKeys() {
@@ -281,7 +294,7 @@ class Keyboard {
   }
 
   downKey(className) {
-    this.props.textArea.focus();
+    const textField = this.props.textArea;
     const keyBtns = document.querySelectorAll('.keyboard__key');
     keyBtns.forEach((keyElem) => {
       if (keyElem.classList.contains(className)) {
@@ -289,34 +302,58 @@ class Keyboard {
           this.toggleCapsLock();
           keyElem.classList.toggle('keyboard__key_active', this.props.capsLock);
         } else if (keyElem.textContent === 'Space') {
-          this.props.value += ' ';
+          this.props.selectionStart += 1;
+          this.props.selectionEnd += 1;
+          textField.value += ' ';
           keyElem.classList.add('keyboard__key_active');
         } else if (keyElem.textContent === 'Enter') {
-          this.props.value += '\n';
+          this.props.selectionStart += 1;
+          this.props.selectionEnd += 1;
+          textField.value += '\n';
           keyElem.classList.add('keyboard__key_active');
         } else if (keyElem.textContent === 'Tab') {
-          this.props.value += '  ';
+          this.props.selectionStart += 2;
+          this.props.selectionEnd += 2;
+          textField.selectionStart = this.props.selectionStart;
+          textField.selectionEnd = this.props.selectionEnd;
+          textField.value += '  ';
           keyElem.classList.add('keyboard__key_active');
         } else if (keyElem.textContent === 'Backspace') {
-          this.props.value = this.props.value.substring(0, this.props.value.length - 1);
+          textField.value = textField.value.substring(0, this.props.selectionEnd - 1)
+            + textField.value.substring(this.props.selectionEnd);
           keyElem.classList.add('keyboard__key_active');
+          if (this.props.selectionEnd > 0) {
+            this.props.selectionEnd -= 1;
+            this.props.selectionStart -= 1;
+          }
+          textField.selectionStart = this.props.selectionStart;
+          textField.selectionEnd = this.props.selectionEnd;
         } else if (keyElem.textContent === 'Shift') {
           this.props.shift = true;
           keyElem.classList.add('keyboard__key_active');
           this.toggleShift();
+        } else if (keyElem.textContent === 'DEL') {
+          textField.value = textField.value.substring(0, this.props.selectionEnd)
+            + textField.value.substring(this.props.selectionEnd + 1);
+          keyElem.classList.add('keyboard__key_active');
+          textField.selectionStart = this.props.selectionStart;
+          textField.selectionEnd = this.props.selectionEnd;
         } else if (keyElem.textContent.length > 1) {
           keyElem.classList.add('keyboard__key_active');
         } else {
-          this.props.value += keyElem.textContent;
+          this.props.selectionStart += 1;
+          this.props.selectionEnd += 1;
+          textField.selectionStart = this.props.selectionStart;
+          textField.selectionEnd = this.props.selectionEnd;
           keyElem.classList.add('keyboard__key_active');
+          textField.value += keyElem.textContent;
+          console.log(textField.value[this.props.selectionEnd - 1]);
         }
       }
     });
-    this.props.textArea.value = this.props.value;
   }
 
   upKey(className, click = false) {
-    this.props.textArea.focus();
     const keyBtns = document.querySelectorAll('.keyboard__key');
     if (click) {
       keyBtns.forEach((keyElem) => {
