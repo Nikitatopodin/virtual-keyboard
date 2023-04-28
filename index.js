@@ -304,12 +304,16 @@ class Keyboard {
         } else if (keyElem.textContent === 'Space') {
           this.props.selectionStart += 1;
           this.props.selectionEnd += 1;
+
           textField.value += ' ';
+
           keyElem.classList.add('keyboard__key_active');
         } else if (keyElem.textContent === 'Enter') {
           this.props.selectionStart += 1;
           this.props.selectionEnd += 1;
+
           textField.value += '\n';
+
           keyElem.classList.add('keyboard__key_active');
         } else if (keyElem.textContent === 'Tab') {
           this.props.selectionStart += 2;
@@ -317,15 +321,19 @@ class Keyboard {
           textField.selectionStart = this.props.selectionStart;
           textField.selectionEnd = this.props.selectionEnd;
           textField.value += '  ';
+
           keyElem.classList.add('keyboard__key_active');
         } else if (keyElem.textContent === 'Backspace') {
           textField.value = textField.value.substring(0, this.props.selectionEnd - 1)
             + textField.value.substring(this.props.selectionEnd);
+
           keyElem.classList.add('keyboard__key_active');
+
           if (this.props.selectionEnd > 0) {
             this.props.selectionEnd -= 1;
             this.props.selectionStart -= 1;
           }
+
           textField.selectionStart = this.props.selectionStart;
           textField.selectionEnd = this.props.selectionEnd;
         } else if (keyElem.textContent === 'Shift') {
@@ -335,19 +343,24 @@ class Keyboard {
         } else if (keyElem.textContent === 'DEL') {
           textField.value = textField.value.substring(0, this.props.selectionEnd)
             + textField.value.substring(this.props.selectionEnd + 1);
+
           keyElem.classList.add('keyboard__key_active');
+
           textField.selectionStart = this.props.selectionStart;
           textField.selectionEnd = this.props.selectionEnd;
         } else if (keyElem.textContent.length > 1) {
           keyElem.classList.add('keyboard__key_active');
         } else {
+          keyElem.classList.add('keyboard__key_active');
+
+          textField.value = textField.value.substring(0, this.props.selectionEnd)
+            + keyElem.textContent
+            + textField.value.substring(this.props.selectionEnd);
+
           this.props.selectionStart += 1;
           this.props.selectionEnd += 1;
           textField.selectionStart = this.props.selectionStart;
           textField.selectionEnd = this.props.selectionEnd;
-          keyElem.classList.add('keyboard__key_active');
-          textField.value += keyElem.textContent;
-          console.log(textField.value[this.props.selectionEnd - 1]);
         }
       }
     });
