@@ -6,7 +6,7 @@ class Keyboard {
     capsLock: false,
     value: '',
     shift: false,
-    language: 'rus',
+    language: 'eng',
   };
 
   eventHanlders = {
@@ -26,9 +26,14 @@ class Keyboard {
     document.body.append(this.props.wrapper);
     this.props.wrapper.append(this.props.board);
 
-    document.addEventListener('keydown', (e) => {
-      e.preventDefault();
-    });
+    this.props.textArea.autofocus = true;
+    this.props.textArea.focus();
+
+    document.addEventListener('keydown', (e) => e.preventDefault());
+    document.addEventListener('keyup', (e) => this.upKey(e.code));
+    document.addEventListener('keydown', (e) => this.downKey(e.code));
+    document.addEventListener('mousedown', (e) => this.downKey(e.target.classList[1]));
+    document.addEventListener('mouseup', (e) => this.upKey(e.target.classList[1], true));
   }
 
   createKeys() {
@@ -177,6 +182,7 @@ class Keyboard {
       const keyCode = pair[0];
       keyBtn.textContent = keyValue;
       keyBtn.classList.add('keyboard__key');
+      keyBtn.classList.add(keyCode);
       this.props.board.append(keyBtn);
 
       // Adding break lines for correct keyboard display
@@ -190,130 +196,11 @@ class Keyboard {
         }
       }
 
-      if (wideKeys.includes(keyValue)) {
-        keyBtn.classList.add('keyboard__key_wide');
-      }
-
       // Special cases
       if (keyValue === 'Space') {
         keyBtn.classList.add('keyboard__key_space', 'Space');
-
-        keyBtn.addEventListener('mousedown', () => {
-          keyBtn.classList.add('keyboard__key_active');
-          this.props.value += ' ';
-          this.props.textArea.value = this.props.value;
-        });
-
-        keyBtn.addEventListener('mouseup', () => {
-          keyBtn.classList.remove('keyboard__key_active');
-        });
-
-        keyBtn.addEventListener('keydown', (e) => this.downKey(e));
-        keyBtn.addEventListener('keyup', (e) => this.upKey(e));
-      } else if (keyValue === 'CapsLock') {
-        keyBtn.classList.add(keyValue);
-
-        keyBtn.addEventListener('mousedown', () => {
-          this.toggleCapsLock();
-          keyBtn.classList.toggle('keyboard__key_active', this.props.capsLock);
-        });
-
-        keyBtn.addEventListener('keydown', (e) => this.downKey(e));
-        keyBtn.addEventListener('keyup', (e) => this.upKey(e));
-      } else if (keyValue === 'Backspace') {
-        keyBtn.classList.add(keyValue);
-
-        keyBtn.addEventListener('mousedown', () => {
-          keyBtn.classList.add('keyboard__key_active');
-          this.props.value = this.props.value.substring(0, this.props.value.length - 1);
-          this.props.textArea.value = this.props.value;
-        });
-        keyBtn.addEventListener('mouseup', () => {
-          keyBtn.classList.remove('keyboard__key_active');
-        });
-      } else if (keyValue === 'Enter') {
-        keyBtn.classList.add(keyValue);
-
-        keyBtn.addEventListener('mousedown', () => {
-          keyBtn.classList.add('keyboard__key_active');
-          this.props.value += '\n';
-          this.props.textArea.value = this.props.value;
-        });
-
-        keyBtn.addEventListener('mouseup', () => {
-          keyBtn.classList.remove('keyboard__key_active');
-        });
-
-        keyBtn.addEventListener('keydown', (e) => this.downKey(e));
-        keyBtn.addEventListener('keyup', (e) => this.upKey(e));
-      } else if (keyValue === 'Tab') {
-        keyBtn.classList.add(keyValue);
-
-        keyBtn.addEventListener('mousedown', () => {
-          keyBtn.classList.add('keyboard__key_active');
-          this.props.value += '  ';
-          this.props.textArea.value = this.props.value;
-        });
-
-        keyBtn.addEventListener('mouseup', () => {
-          keyBtn.classList.remove('keyboard__key_active');
-        });
-
-        keyBtn.addEventListener('keydown', (e) => this.downKey(e));
-        keyBtn.addEventListener('keyup', (e) => this.upKey(e));
-      } else if (keyValue === 'Shift') {
-        keyBtn.classList.add(keyCode);
-
-        keyBtn.addEventListener('mousedown', () => {
-          keyBtn.classList.add('keyboard__key_active');
-          this.props.shift = true;
-          this.toggleShift();
-        });
-
-        keyBtn.addEventListener('mouseup', () => {
-          keyBtn.classList.remove('keyboard__key_active');
-          this.props.shift = false;
-          this.toggleShift();
-        });
-
-        keyBtn.addEventListener('keydown', (e) => this.downKey(e));
-        keyBtn.addEventListener('keyup', (e) => this.upKey(e));
-      } else if (keyValue.length > 1) {
-        keyBtn.classList.add(keyCode, 'arrow');
-
-        keyBtn.addEventListener('mousedown', () => {
-          keyBtn.classList.add('keyboard__key_active');
-        });
-
-        keyBtn.addEventListener('mouseup', () => {
-          keyBtn.classList.remove('keyboard__key_active');
-        });
-      } else {
-        keyBtn.classList.add(keyCode);
-
-        keyBtn.addEventListener('mousedown', () => {
-          const keyBtns = document.querySelectorAll('.keyboard__key');
-          keyBtns.forEach((k) => {
-            if (k.classList.contains(keyCode)) {
-              this.props.value += k.textContent;
-            }
-          });
-          keyBtn.classList.add('keyboard__key_active');
-          this.props.textArea.value = this.props.value;
-        });
-
-        this.props.board.addEventListener('mouseup', () => {
-          const keyBtns = document.querySelectorAll('.keyboard__key');
-
-          keyBtns.forEach((keyElem) => {
-            if (keyElem.classList.contains(keyCode)) {
-              keyElem.classList.remove('keyboard__key_active');
-            }
-          });
-        });
-
-        keyBtn.addEventListener('keydown', (e) => this.downKey(e));
-        keyBtn.addEventListener('keyup', (e) => this.upKey(e));
+      } else if (wideKeys.includes(keyValue)) {
+        keyBtn.classList.add('keyboard__key_wide');
       }
     });
   }
@@ -374,6 +261,7 @@ class Keyboard {
           if (k.textContent.length === 1) {
             kCopy.textContent = k.textContent.toUpperCase();
           }
+
           if (shiftSpecialKeys.indexOf(k.textContent) !== -1) {
             kCopy.textContent = nonShiftSpecialKeys[shiftSpecialKeys.indexOf(k.textContent)]
               .toUpperCase();
@@ -392,10 +280,11 @@ class Keyboard {
     });
   }
 
-  downKey(e) {
+  downKey(className) {
+    this.props.textArea.focus();
     const keyBtns = document.querySelectorAll('.keyboard__key');
     keyBtns.forEach((keyElem) => {
-      if (keyElem.classList.contains(e.code)) {
+      if (keyElem.classList.contains(className)) {
         if (keyElem.textContent === 'CapsLock') {
           this.toggleCapsLock();
           keyElem.classList.toggle('keyboard__key_active', this.props.capsLock);
@@ -426,10 +315,11 @@ class Keyboard {
     this.props.textArea.value = this.props.value;
   }
 
-  upKey(e) {
+  upKey(className, click = false) {
+    this.props.textArea.focus();
     const keyBtns = document.querySelectorAll('.keyboard__key');
-    keyBtns.forEach((keyElem) => {
-      if (keyElem.classList.contains(e.code)) {
+    if (click) {
+      keyBtns.forEach((keyElem) => {
         if (keyElem.textContent === 'CapsLock') {
           keyElem.classList.toggle('keyboard__key_active', this.props.capsLock);
         } else if (keyElem.textContent === 'Shift') {
@@ -439,8 +329,22 @@ class Keyboard {
         } else {
           keyElem.classList.remove('keyboard__key_active');
         }
-      }
-    });
+      });
+    } else {
+      keyBtns.forEach((keyElem) => {
+        if (keyElem.classList.contains(className)) {
+          if (keyElem.textContent === 'CapsLock') {
+            keyElem.classList.toggle('keyboard__key_active', this.props.capsLock);
+          } else if (keyElem.textContent === 'Shift') {
+            this.props.shift = false;
+            keyElem.classList.remove('keyboard__key_active');
+            this.toggleShift();
+          } else {
+            keyElem.classList.remove('keyboard__key_active');
+          }
+        }
+      });
+    }
   }
 }
 
