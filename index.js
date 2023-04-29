@@ -83,7 +83,7 @@ class Keyboard {
     ArrowLeft: '',
     ArrowDown: '',
     ArrowRight: '',
-    Delete: 'DEL',
+    Delete: 'Del',
   };
 
   keyObjRus = {
@@ -150,7 +150,7 @@ class Keyboard {
     ArrowLeft: '',
     ArrowDown: '',
     ArrowRight: '',
-    Delete: 'DEL',
+    Delete: 'Del',
   };
 
   constructor() {
@@ -241,18 +241,19 @@ class Keyboard {
 
   toggleCapsLock() {
     this.props.capsLock = !this.props.capsLock;
-
     const keyBtns = document.querySelectorAll('.keyboard__key');
 
     keyBtns.forEach((k) => {
       const kCopy = k;
       if (this.props.capsLock) {
         if (k.textContent.length === 1) {
-          kCopy.textContent = k.textContent.toUpperCase();
+          kCopy.textContent = this.props.shift ? k.textContent.toLowerCase()
+            : k.textContent.toUpperCase();
         }
       } else if (!this.props.capsLock) {
         if (k.textContent.length === 1) {
-          kCopy.textContent = k.textContent.toLowerCase();
+          kCopy.textContent = this.props.shift ? k.textContent.toUpperCase()
+            : k.textContent.toLowerCase();
         }
       }
     });
@@ -318,6 +319,7 @@ class Keyboard {
     const textField = this.props.textArea;
     textField.focus();
     const keyBtns = document.querySelectorAll('.keyboard__key');
+
     keyBtns.forEach((keyElem) => {
       if (keyElem.classList.contains(className)) {
         if (keyElem.textContent === 'CapsLock') {
@@ -342,10 +344,10 @@ class Keyboard {
           textField.selectionEnd = this.props.selectionEnd;
         } else if (keyElem.textContent === 'Tab') {
           keyElem.classList.add('keyboard__key_active');
-          textField.value = `${textField.value.substring(0, this.props.selectionEnd)}  ${textField.value.substring(this.props.selectionEnd)}`;
+          textField.value = `${textField.value.substring(0, this.props.selectionEnd)}\t${textField.value.substring(this.props.selectionEnd)}`;
 
-          this.props.selectionStart += 2;
-          this.props.selectionEnd += 2;
+          this.props.selectionStart += 1;
+          this.props.selectionEnd += 1;
           textField.selectionStart = this.props.selectionStart;
           textField.selectionEnd = this.props.selectionEnd;
         } else if (keyElem.textContent === 'Backspace') {
@@ -365,7 +367,7 @@ class Keyboard {
           this.props.shift = true;
           keyElem.classList.add('keyboard__key_active');
           this.toggleShift();
-        } else if (keyElem.textContent === 'DEL') {
+        } else if (keyElem.textContent === 'Del') {
           textField.value = textField.value.substring(0, this.props.selectionEnd)
             + textField.value.substring(this.props.selectionEnd + 1);
 
@@ -395,8 +397,48 @@ class Keyboard {
               }
             }
           }
-        } else if (keyElem.textContent.length > 1) {
+        } else if (keyElem.classList.contains('ArrowRight')) {
           keyElem.classList.add('keyboard__key_active');
+
+          this.props.selectionStart += 1;
+          this.props.selectionEnd += 1;
+          textField.selectionStart = this.props.selectionStart;
+          textField.selectionEnd = this.props.selectionEnd;
+        } else if (keyElem.classList.contains('ArrowLeft')) {
+          keyElem.classList.add('keyboard__key_active');
+
+          this.props.selectionStart -= 1;
+          this.props.selectionEnd -= 1;
+          textField.selectionStart = this.props.selectionStart;
+          textField.selectionEnd = this.props.selectionEnd;
+        } else if (keyElem.classList.contains('ArrowUp')) {
+          keyElem.classList.add('keyboard__key_active');
+
+          const partTextArea = textField.value.substring(0, this.props.selectionStart);
+          const prev = partTextArea.substring(partTextArea.lastIndexOf('\n'), this.props.selectionStart);
+          const prevPrev = partTextArea.substring(partTextArea.lastIndexOf('\n', this.props.selectionStart - prev.length - 1));
+
+          console.log(prevPrev.length);
+          console.log(prev.length)
+          if (prevPrev.length > prev.length) {
+            this.props.selectionStart = prevPrev.lastIndexOf('\n');
+            this.props.selectionEnd = prevPrev.lastIndexOf('\n');
+          } else {
+            this.props.selectionStart -= prevPrev.length - prev.length;
+            this.props.selectionEnd -= prevPrev.length - prev.length;
+          }
+
+          textField.selectionStart = this.props.selectionStart;
+          textField.selectionEnd = this.props.selectionEnd;
+        } else if (keyElem.classList.contains('ArrowDown')) {
+          keyElem.classList.add('keyboard__key_active');
+          const prev = textField.value;
+          for (let i = textField.value.length; i > 0; i -= 1) {
+            this.props.selectionStart = prev[i] === '\n' ? this.props.selectionStart - (i + 1) : this.props.selectionStart;
+            this.props.selectionEnd = prev[i] === '\n' ? this.props.selectionEnd - (i + 1) : this.props.selectionEnd;
+          }
+          textField.selectionStart = this.props.selectionStart;
+          textField.selectionEnd = this.props.selectionEnd;
         } else {
           keyElem.classList.add('keyboard__key_active');
 
@@ -477,7 +519,16 @@ class Keyboard {
 
         if (keyElem.classList.contains(keyCode)) {
           const keyCopy = keyElem;
-          keyCopy.textContent = keyValue;
+
+          if (this.props.shift && this.props.capsLock) {
+            keyCopy.textContent = keyValue;
+          } else if (this.props.shift || this.props.capsLock) {
+            if (keyCopy.textContent.length === 1) {
+              keyCopy.textContent = keyValue.toUpperCase();
+            }
+          } else {
+            keyCopy.textContent = keyValue;
+          }
         }
       });
     });
