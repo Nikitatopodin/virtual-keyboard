@@ -184,7 +184,24 @@ class Keyboard {
       this.props.textArea.selectionEnd = this.props.selectionStart;
     });
 
-    this.createKeys(this.keyObjEng);
+    const setLocalStorage = () => {
+      localStorage.setItem('currentLng', this.props.language);
+    };
+
+    const getLocalStorage = () => {
+      if (localStorage.getItem('currentLng', this.props.language)) {
+        this.props.language = localStorage.getItem('currentLng', this.props.language);
+        if (this.props.language === 'eng') {
+          this.createKeys(this.keyObjEng);
+        } else {
+          this.createKeys(this.keyObjRus);
+        }
+      } else {
+        this.createKeys(this.keyObjEng);
+      }
+    };
+    window.addEventListener('beforeunload', setLocalStorage);
+    window.addEventListener('load', getLocalStorage);
   }
 
   createKeys(keyObj) {
