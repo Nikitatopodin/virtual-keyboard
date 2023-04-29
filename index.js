@@ -6,6 +6,8 @@ class Keyboard {
     capsLock: false,
     value: '',
     shift: false,
+    ctrl: false,
+    alt: false,
     language: 'eng',
     selectionStart: 0,
     selectionEnd: 0,
@@ -15,6 +17,140 @@ class Keyboard {
     onclick: null,
     onkeydown: null,
     onkeyup: null,
+  };
+
+  keyObjEng = {
+    Backquote: '`',
+    Digit1: '1',
+    Digit2: '2',
+    Digit3: '3',
+    Digit4: '4',
+    Digit5: '5',
+    Digit6: '6',
+    Digit7: '7',
+    Digit8: '8',
+    Digit9: '9',
+    Digit0: '0',
+    Minus: '-',
+    Equal: '=',
+    Backspace: 'Backspace',
+    Tab: 'Tab',
+    KeyQ: 'q',
+    KeyW: 'w',
+    KeyE: 'e',
+    KeyR: 'r',
+    KeyT: 't',
+    KeyY: 'y',
+    KeyU: 'u',
+    KeyI: 'i',
+    KeyO: 'o',
+    KeyP: 'p',
+    BracketLeft: '[',
+    BracketRight: ']',
+    Backslash: '\\',
+    CapsLock: 'CapsLock',
+    KeyA: 'a',
+    KeyS: 's',
+    KeyD: 'd',
+    KeyF: 'f',
+    KeyG: 'g',
+    KeyH: 'h',
+    KeyJ: 'j',
+    KeyK: 'k',
+    KeyL: 'l',
+    Semicolon: ';',
+    Quote: "'",
+    Enter: 'Enter',
+    ShiftLeft: 'Shift',
+    KeyZ: 'z',
+    KeyX: 'x',
+    KeyC: 'c',
+    KeyV: 'v',
+    KeyB: 'b',
+    KeyN: 'n',
+    KeyM: 'm',
+    Comma: ',',
+    Period: '.',
+    Slash: '/',
+    ArrowUp: '',
+    ShiftRight: 'Shift',
+    ControlLeft: 'Ctrl',
+    MetaLeft: 'Win',
+    AltLeft: 'Alt',
+    Space: 'Space',
+    AltRight: 'Alt',
+    ControlRight: 'Ctrl',
+    ArrowLeft: '',
+    ArrowDown: '',
+    ArrowRight: '',
+    Delete: 'DEL',
+  };
+
+  keyObjRus = {
+    Backquote: 'ё',
+    Digit1: '1',
+    Digit2: '2',
+    Digit3: '3',
+    Digit4: '4',
+    Digit5: '5',
+    Digit6: '6',
+    Digit7: '7',
+    Digit8: '8',
+    Digit9: '9',
+    Digit0: '0',
+    Minus: '-',
+    Equal: '=',
+    Backspace: 'Backspace',
+    Tab: 'Tab',
+    KeyQ: 'й',
+    KeyW: 'ц',
+    KeyE: 'у',
+    KeyR: 'к',
+    KeyT: 'е',
+    KeyY: 'н',
+    KeyU: 'г',
+    KeyI: 'ш',
+    KeyO: 'щ',
+    KeyP: 'з',
+    BracketLeft: 'х',
+    BracketRight: 'ъ',
+    Backslash: '\\',
+    CapsLock: 'CapsLock',
+    KeyA: 'ф',
+    KeyS: 'ы',
+    KeyD: 'в',
+    KeyF: 'а',
+    KeyG: 'п',
+    KeyH: 'р',
+    KeyJ: 'о',
+    KeyK: 'л',
+    KeyL: 'д',
+    Semicolon: 'ж',
+    Quote: 'э',
+    Enter: 'Enter',
+    ShiftLeft: 'Shift',
+    KeyZ: 'я',
+    KeyX: 'ч',
+    KeyC: 'с',
+    KeyV: 'м',
+    KeyB: 'и',
+    KeyN: 'т',
+    KeyM: 'ь',
+    Comma: 'б',
+    Period: 'ю',
+    Slash: '.',
+    ArrowUp: '',
+    ShiftRight: 'Shift',
+    ControlLeft: 'Ctrl',
+    MetaLeft: 'Win',
+    AltLeft: 'Alt',
+    Space: 'Space',
+    AltRight: 'Alt',
+    ControlRight: 'Ctrl',
+    ArrowLeft: '',
+    ArrowDown: '',
+    ArrowRight: '',
+    Delete: 'DEL',
   };
 
   constructor() {
@@ -47,144 +183,12 @@ class Keyboard {
       this.props.selectionStart = e.target.selectionStart;
       this.props.textArea.selectionEnd = this.props.selectionStart;
     });
+
+    this.createKeys(this.keyObjEng);
   }
 
-  createKeys() {
-    const keyObjEng = {
-      Backquote: '`',
-      Digit1: '1',
-      Digit2: '2',
-      Digit3: '3',
-      Digit4: '4',
-      Digit5: '5',
-      Digit6: '6',
-      Digit7: '7',
-      Digit8: '8',
-      Digit9: '9',
-      Digit0: '0',
-      Minus: '-',
-      Equal: '=',
-      Backspace: 'Backspace',
-      Tab: 'Tab',
-      KeyQ: 'q',
-      KeyW: 'w',
-      KeyE: 'e',
-      KeyR: 'r',
-      KeyT: 't',
-      KeyY: 'y',
-      KeyU: 'u',
-      KeyI: 'i',
-      KeyO: 'o',
-      KeyP: 'p',
-      BracketLeft: '[',
-      BracketRight: ']',
-      Backslash: '\\',
-      CapsLock: 'CapsLock',
-      KeyA: 'a',
-      KeyS: 's',
-      KeyD: 'd',
-      KeyF: 'f',
-      KeyG: 'g',
-      KeyH: 'h',
-      KeyJ: 'j',
-      KeyK: 'k',
-      KeyL: 'l',
-      Semicolon: ';',
-      Quote: "'",
-      Enter: 'Enter',
-      ShiftLeft: 'Shift',
-      KeyZ: 'z',
-      KeyX: 'x',
-      KeyC: 'c',
-      KeyV: 'v',
-      KeyB: 'b',
-      KeyN: 'n',
-      KeyM: 'm',
-      Comma: ',',
-      Period: '.',
-      Slash: '/',
-      ArrowUp: '',
-      ShiftRight: 'Shift',
-      ControlLeft: 'Ctrl',
-      MetaLeft: 'Win',
-      AltLeft: 'Alt',
-      Space: 'Space',
-      AltRight: 'Alt',
-      ControlRight: 'Ctrl',
-      ArrowLeft: '',
-      ArrowDown: '',
-      ArrowRight: '',
-      Delete: 'DEL',
-    };
-
-    const keyObjRus = {
-      Backquote: 'ё',
-      Digit1: '1',
-      Digit2: '2',
-      Digit3: '3',
-      Digit4: '4',
-      Digit5: '5',
-      Digit6: '6',
-      Digit7: '7',
-      Digit8: '8',
-      Digit9: '9',
-      Digit0: '0',
-      Minus: '-',
-      Equal: '=',
-      Backspace: 'Backspace',
-      Tab: 'Tab',
-      KeyQ: 'й',
-      KeyW: 'ц',
-      KeyE: 'у',
-      KeyR: 'к',
-      KeyT: 'е',
-      KeyY: 'н',
-      KeyU: 'г',
-      KeyI: 'ш',
-      KeyO: 'щ',
-      KeyP: 'з',
-      BracketLeft: 'х',
-      BracketRight: 'ъ',
-      Backslash: '\\',
-      CapsLock: 'CapsLock',
-      KeyA: 'ф',
-      KeyS: 'ы',
-      KeyD: 'в',
-      KeyF: 'а',
-      KeyG: 'п',
-      KeyH: 'р',
-      KeyJ: 'о',
-      KeyK: 'л',
-      KeyL: 'д',
-      Semicolon: 'ж',
-      Quote: 'э',
-      Enter: 'Enter',
-      ShiftLeft: 'Shift',
-      KeyZ: 'я',
-      KeyX: 'ч',
-      KeyC: 'с',
-      KeyV: 'м',
-      KeyB: 'и',
-      KeyN: 'т',
-      KeyM: 'ь',
-      Comma: 'б',
-      Period: 'ю',
-      Slash: '.',
-      ArrowUp: '',
-      ShiftRight: 'Shift',
-      ControlLeft: 'Ctrl',
-      MetaLeft: 'Win',
-      AltLeft: 'Alt',
-      Space: 'Space',
-      AltRight: 'Alt',
-      ControlRight: 'Ctrl',
-      ArrowLeft: '',
-      ArrowDown: '',
-      ArrowRight: '',
-      Delete: 'DEL',
-    };
-
-    const keys = this.props.language === 'eng' ? Object.entries(keyObjEng) : Object.entries(keyObjRus);
+  createKeys(keyObj) {
+    const keys = Object.entries(keyObj);
     const edgeKeys = ['Backspace', '\\', 'Enter', 'Shift'];
     const wideKeys = ['CapsLock', 'Enter', 'Shift', 'Backspace', 'Tab'];
 
@@ -295,6 +299,7 @@ class Keyboard {
 
   downKey(className) {
     const textField = this.props.textArea;
+    textField.focus();
     const keyBtns = document.querySelectorAll('.keyboard__key');
     keyBtns.forEach((keyElem) => {
       if (keyElem.classList.contains(className)) {
@@ -302,32 +307,35 @@ class Keyboard {
           this.toggleCapsLock();
           keyElem.classList.toggle('keyboard__key_active', this.props.capsLock);
         } else if (keyElem.textContent === 'Space') {
+          textField.value = `${textField.value.substring(0, this.props.selectionEnd)} ${textField.value.substring(this.props.selectionEnd)}`;
+
           this.props.selectionStart += 1;
           this.props.selectionEnd += 1;
-
-          textField.value += ' ';
 
           keyElem.classList.add('keyboard__key_active');
         } else if (keyElem.textContent === 'Enter') {
+          keyElem.classList.add('keyboard__key_active');
+
+          textField.value = `${textField.value.substring(0, this.props.selectionEnd)}\n${textField.value.substring(this.props.selectionEnd)}`;
+
           this.props.selectionStart += 1;
           this.props.selectionEnd += 1;
 
-          textField.value += '\n';
-
-          keyElem.classList.add('keyboard__key_active');
+          textField.selectionStart = this.props.selectionStart;
+          textField.selectionEnd = this.props.selectionEnd;
         } else if (keyElem.textContent === 'Tab') {
+          keyElem.classList.add('keyboard__key_active');
+          textField.value = `${textField.value.substring(0, this.props.selectionEnd)}  ${textField.value.substring(this.props.selectionEnd)}`;
+
           this.props.selectionStart += 2;
           this.props.selectionEnd += 2;
           textField.selectionStart = this.props.selectionStart;
           textField.selectionEnd = this.props.selectionEnd;
-          textField.value += '  ';
-
-          keyElem.classList.add('keyboard__key_active');
         } else if (keyElem.textContent === 'Backspace') {
+          keyElem.classList.add('keyboard__key_active');
+
           textField.value = textField.value.substring(0, this.props.selectionEnd - 1)
             + textField.value.substring(this.props.selectionEnd);
-
-          keyElem.classList.add('keyboard__key_active');
 
           if (this.props.selectionEnd > 0) {
             this.props.selectionEnd -= 1;
@@ -348,6 +356,28 @@ class Keyboard {
 
           textField.selectionStart = this.props.selectionStart;
           textField.selectionEnd = this.props.selectionEnd;
+        } else if (keyElem.textContent === 'Ctrl' || keyElem.textContent === 'Alt') {
+          keyElem.classList.add('keyboard__key_active');
+          if (keyElem.textContent === 'Ctrl') {
+            this.props.ctrl = true;
+            if (this.props.alt) {
+              if (this.props.language === 'eng') {
+                this.changeLanguage(this.keyObjRus);
+              } else {
+                this.changeLanguage(this.keyObjEng);
+              }
+            }
+          }
+          if (keyElem.textContent === 'Alt') {
+            this.props.alt = true;
+            if (this.props.ctrl) {
+              if (this.props.language === 'eng') {
+                this.changeLanguage(this.keyObjRus);
+              } else {
+                this.changeLanguage(this.keyObjEng);
+              }
+            }
+          }
         } else if (keyElem.textContent.length > 1) {
           keyElem.classList.add('keyboard__key_active');
         } else {
@@ -367,6 +397,8 @@ class Keyboard {
   }
 
   upKey(className, click = false) {
+    const textField = this.props.textArea;
+    textField.focus();
     const keyBtns = document.querySelectorAll('.keyboard__key');
     if (click) {
       keyBtns.forEach((keyElem) => {
@@ -376,6 +408,14 @@ class Keyboard {
           this.props.shift = false;
           keyElem.classList.remove('keyboard__key_active');
           this.toggleShift();
+        } else if (keyElem.textContent === 'Ctrl' || keyElem.textContent === 'Alt') {
+          keyElem.classList.remove('keyboard__key_active');
+          if (keyElem.textContent === 'Ctrl') {
+            this.props.ctrl = false;
+          }
+          if (keyElem.textContent === 'Alt') {
+            this.props.alt = false;
+          }
         } else {
           keyElem.classList.remove('keyboard__key_active');
         }
@@ -389,6 +429,14 @@ class Keyboard {
             this.props.shift = false;
             keyElem.classList.remove('keyboard__key_active');
             this.toggleShift();
+          } else if (keyElem.textContent === 'Ctrl' || keyElem.textContent === 'Alt') {
+            keyElem.classList.remove('keyboard__key_active');
+            if (keyElem.textContent === 'Ctrl') {
+              this.props.ctrl = false;
+            }
+            if (keyElem.textContent === 'Alt') {
+              this.props.alt = false;
+            }
           } else {
             keyElem.classList.remove('keyboard__key_active');
           }
@@ -396,7 +444,26 @@ class Keyboard {
       });
     }
   }
-}
 
+  changeLanguage(keyObj) {
+    if (this.props.language === 'eng') {
+      this.props.language = 'rus';
+    } else {
+      this.props.language = 'eng';
+    }
+    const keyBtns = document.querySelectorAll('.keyboard__key');
+    const keys = Object.entries(keyObj);
+    keyBtns.forEach((keyElem) => {
+      keys.forEach((pair) => {
+        const keyValue = pair[1];
+        const keyCode = pair[0];
+
+        if (keyElem.classList.contains(keyCode)) {
+          const keyCopy = keyElem;
+          keyCopy.textContent = keyValue;
+        }
+      });
+    });
+  }
+}
 const keyboard = new Keyboard();
-keyboard.createKeys();
