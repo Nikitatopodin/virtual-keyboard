@@ -1,3 +1,5 @@
+import { keyObjEng, keyObjRus } from './modules/keyObj.js';
+
 class Keyboard {
   props = {
     textArea: null,
@@ -17,140 +19,6 @@ class Keyboard {
     onclick: null,
     onkeydown: null,
     onkeyup: null,
-  };
-
-  keyObjEng = {
-    Backquote: '`',
-    Digit1: '1',
-    Digit2: '2',
-    Digit3: '3',
-    Digit4: '4',
-    Digit5: '5',
-    Digit6: '6',
-    Digit7: '7',
-    Digit8: '8',
-    Digit9: '9',
-    Digit0: '0',
-    Minus: '-',
-    Equal: '=',
-    Backspace: 'Backspace',
-    Tab: 'Tab',
-    KeyQ: 'q',
-    KeyW: 'w',
-    KeyE: 'e',
-    KeyR: 'r',
-    KeyT: 't',
-    KeyY: 'y',
-    KeyU: 'u',
-    KeyI: 'i',
-    KeyO: 'o',
-    KeyP: 'p',
-    BracketLeft: '[',
-    BracketRight: ']',
-    Backslash: '\\',
-    CapsLock: 'CapsLock',
-    KeyA: 'a',
-    KeyS: 's',
-    KeyD: 'd',
-    KeyF: 'f',
-    KeyG: 'g',
-    KeyH: 'h',
-    KeyJ: 'j',
-    KeyK: 'k',
-    KeyL: 'l',
-    Semicolon: ';',
-    Quote: "'",
-    Enter: 'Enter',
-    ShiftLeft: 'Shift',
-    KeyZ: 'z',
-    KeyX: 'x',
-    KeyC: 'c',
-    KeyV: 'v',
-    KeyB: 'b',
-    KeyN: 'n',
-    KeyM: 'm',
-    Comma: ',',
-    Period: '.',
-    Slash: '/',
-    ArrowUp: '',
-    ShiftRight: 'Shift',
-    ControlLeft: 'Ctrl',
-    MetaLeft: 'Win',
-    AltLeft: 'Alt',
-    Space: 'Space',
-    AltRight: 'Alt',
-    ControlRight: 'Ctrl',
-    ArrowLeft: '',
-    ArrowDown: '',
-    ArrowRight: '',
-    Delete: 'Del',
-  };
-
-  keyObjRus = {
-    Backquote: 'ё',
-    Digit1: '1',
-    Digit2: '2',
-    Digit3: '3',
-    Digit4: '4',
-    Digit5: '5',
-    Digit6: '6',
-    Digit7: '7',
-    Digit8: '8',
-    Digit9: '9',
-    Digit0: '0',
-    Minus: '-',
-    Equal: '=',
-    Backspace: 'Backspace',
-    Tab: 'Tab',
-    KeyQ: 'й',
-    KeyW: 'ц',
-    KeyE: 'у',
-    KeyR: 'к',
-    KeyT: 'е',
-    KeyY: 'н',
-    KeyU: 'г',
-    KeyI: 'ш',
-    KeyO: 'щ',
-    KeyP: 'з',
-    BracketLeft: 'х',
-    BracketRight: 'ъ',
-    Backslash: '\\',
-    CapsLock: 'CapsLock',
-    KeyA: 'ф',
-    KeyS: 'ы',
-    KeyD: 'в',
-    KeyF: 'а',
-    KeyG: 'п',
-    KeyH: 'р',
-    KeyJ: 'о',
-    KeyK: 'л',
-    KeyL: 'д',
-    Semicolon: 'ж',
-    Quote: 'э',
-    Enter: 'Enter',
-    ShiftLeft: 'Shift',
-    KeyZ: 'я',
-    KeyX: 'ч',
-    KeyC: 'с',
-    KeyV: 'м',
-    KeyB: 'и',
-    KeyN: 'т',
-    KeyM: 'ь',
-    Comma: 'б',
-    Period: 'ю',
-    Slash: '.',
-    ArrowUp: '',
-    ShiftRight: 'Shift',
-    ControlLeft: 'Ctrl',
-    MetaLeft: 'Win',
-    AltLeft: 'Alt',
-    Space: 'Space',
-    AltRight: 'Alt',
-    ControlRight: 'Ctrl',
-    ArrowLeft: '',
-    ArrowDown: '',
-    ArrowRight: '',
-    Delete: 'Del',
   };
 
   constructor() {
@@ -192,12 +60,12 @@ class Keyboard {
       if (localStorage.getItem('currentLng', this.props.language)) {
         this.props.language = localStorage.getItem('currentLng', this.props.language);
         if (this.props.language === 'eng') {
-          this.createKeys(this.keyObjEng);
+          this.createKeys(keyObjEng);
         } else {
-          this.createKeys(this.keyObjRus);
+          this.createKeys(keyObjRus);
         }
       } else {
-        this.createKeys(this.keyObjEng);
+        this.createKeys(keyObjEng);
       }
     };
     window.addEventListener('beforeunload', setLocalStorage);
@@ -329,8 +197,9 @@ class Keyboard {
 
           this.changeCarriagePos(1, false);
         } else if (keyElem.textContent === 'Shift') {
-          this.props.shift = true;
           keyElem.classList.add('keyboard__key_active');
+          this.props.shift = true;
+
           this.toggleShift();
         } else if (keyElem.textContent === 'Del') {
           keyElem.classList.add('keyboard__key_active');
@@ -413,6 +282,7 @@ class Keyboard {
     const textField = this.props.textArea;
     textField.focus();
     const keyBtns = document.querySelectorAll('.keyboard__key');
+
     if (click) {
       keyBtns.forEach((keyElem) => {
         if (keyElem.textContent === 'CapsLock') {
