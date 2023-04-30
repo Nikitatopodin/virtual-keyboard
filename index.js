@@ -272,44 +272,24 @@ class Keyboard {
     keyBtns.forEach((k) => {
       const kCopy = k;
       if (this.props.shift) {
-        if (this.props.capsLock) {
-          if (k.textContent.length === 1) {
-            kCopy.textContent = k.textContent.toLowerCase();
-          }
-
-          if (nonShiftSpecialKeys.indexOf(k.textContent) !== -1) {
-            kCopy.textContent = shiftSpecialKeys[nonShiftSpecialKeys.indexOf(k.textContent)]
-              .toLowerCase();
-          }
-        } else {
-          if (k.textContent.length === 1) {
-            kCopy.textContent = k.textContent.toUpperCase();
-          }
-
-          if (nonShiftSpecialKeys.indexOf(k.textContent) !== -1) {
-            kCopy.textContent = shiftSpecialKeys[nonShiftSpecialKeys.indexOf(k.textContent)]
-              .toLowerCase();
-          }
+        if (k.textContent.length === 1) {
+          kCopy.textContent = this.props.capsLock ? k.textContent.toLowerCase()
+            : k.textContent.toUpperCase();
         }
-      } else if (!this.props.shift) {
-        if (this.props.capsLock) {
-          if (k.textContent.length === 1) {
-            kCopy.textContent = k.textContent.toUpperCase();
-          }
 
-          if (shiftSpecialKeys.indexOf(k.textContent) !== -1) {
-            kCopy.textContent = nonShiftSpecialKeys[shiftSpecialKeys.indexOf(k.textContent)]
-              .toUpperCase();
-          }
-        } else {
-          if (k.textContent.length === 1) {
-            kCopy.textContent = k.textContent.toLowerCase();
-          }
+        if (nonShiftSpecialKeys.indexOf(k.textContent) !== -1) {
+          kCopy.textContent = shiftSpecialKeys[nonShiftSpecialKeys.indexOf(k.textContent)]
+            .toLowerCase();
+        }
+      } else {
+        if (k.textContent.length === 1) {
+          kCopy.textContent = this.props.capsLock ? k.textContent.toUpperCase()
+            : k.textContent.toLowerCase();
+        }
 
-          if (shiftSpecialKeys.indexOf(k.textContent) !== -1) {
-            kCopy.textContent = nonShiftSpecialKeys[shiftSpecialKeys.indexOf(k.textContent)]
-              .toLowerCase();
-          }
+        if (shiftSpecialKeys.indexOf(k.textContent) !== -1) {
+          kCopy.textContent = nonShiftSpecialKeys[shiftSpecialKeys.indexOf(k.textContent)]
+            .toUpperCase();
         }
       }
     });
