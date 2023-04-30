@@ -355,6 +355,8 @@ class Keyboard {
 
           textField.selectionStart = this.props.selectionStart;
           textField.selectionEnd = this.props.selectionEnd;
+        } else if (keyElem.textContent === 'Win') {
+          keyElem.classList.add('keyboard__key_active');
         } else if (keyElem.textContent === 'Ctrl' || keyElem.textContent === 'Alt') {
           keyElem.classList.add('keyboard__key_active');
           if (keyElem.textContent === 'Ctrl') {
