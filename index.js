@@ -51,7 +51,7 @@ class Keyboard {
     this.props.selectEnd = this.props.textArea.selectionEnd;
 
     this.props.title.textContent = 'RSS Virtual Keyboard';
-    this.props.description.innerHTML = 'Клавиатура созадана на Windows.<br>Горячие клавиши для переключения языка: левые Ctrl+Alt.';
+    this.props.description.innerHTML = 'Клавиатура созадана в системе Windows.<br>Горячие клавиши для переключения языка: левые Ctrl+Alt.';
 
     document.addEventListener('keydown', (e) => e.preventDefault());
     document.addEventListener('keydown', (e) => this.downKey(e.code));
