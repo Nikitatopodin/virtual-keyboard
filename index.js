@@ -213,6 +213,9 @@ class Keyboard {
         } else if (keyElem.classList.contains('ControlLeft') || keyElem.classList.contains('AltLeft')) {
           keyElem.classList.add('keyboard__key_active');
           if (keyElem.textContent === 'Ctrl') {
+            if (this.props.ctrl) {
+              return;
+            }
             this.props.ctrl = true;
             if (this.props.alt) {
               if (this.props.language === 'eng') {
@@ -223,6 +226,9 @@ class Keyboard {
             }
           }
           if (keyElem.classList.contains('AltLeft')) {
+            if (this.props.alt) {
+              return;
+            }
             this.props.alt = true;
             if (this.props.ctrl) {
               if (this.props.language === 'eng') {
