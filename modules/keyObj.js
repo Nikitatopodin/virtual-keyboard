@@ -51,7 +51,7 @@ const keyObjEng = {
   Comma: ',',
   Period: '.',
   Slash: '/',
-  ArrowUp: '',
+  ArrowUp: '▲',
   ShiftRight: 'Shift',
   ControlLeft: 'Ctrl',
   MetaLeft: 'Win',
@@ -59,9 +59,9 @@ const keyObjEng = {
   Space: 'Space',
   AltRight: 'Alt',
   ControlRight: 'Ctrl',
-  ArrowLeft: '',
-  ArrowDown: '',
-  ArrowRight: '',
+  ArrowLeft: '◄',
+  ArrowDown: '▼',
+  ArrowRight: '►',
   Delete: 'Del',
 };
 
@@ -118,7 +118,7 @@ const keyObjRus = {
   Comma: 'б',
   Period: 'ю',
   Slash: '.',
-  ArrowUp: '',
+  ArrowUp: '▲',
   ShiftRight: 'Shift',
   ControlLeft: 'Ctrl',
   MetaLeft: 'Win',
@@ -126,9 +126,9 @@ const keyObjRus = {
   Space: 'Space',
   AltRight: 'Alt',
   ControlRight: 'Ctrl',
-  ArrowLeft: '',
-  ArrowDown: '',
-  ArrowRight: '',
+  ArrowLeft: '◄',
+  ArrowDown: '▼',
+  ArrowRight: '►',
   Delete: 'Del',
 };
 

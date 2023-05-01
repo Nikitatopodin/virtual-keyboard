@@ -2,9 +2,13 @@ import { keyObjEng, keyObjRus } from './modules/keyObj.js';
 
 class Keyboard {
   props = {
+    start: null,
+    title: null,
     textArea: null,
     wrapper: null,
     board: null,
+    descriptionWrapper: null,
+    description: null,
     capsLock: false,
     value: '',
     shift: false,
@@ -22,19 +26,32 @@ class Keyboard {
     this.props.textArea.rows = 10;
     this.props.textArea.cols = 100;
     this.props.textArea.wrap = 'hard';
+    this.props.title = document.createElement('div');
     this.props.wrapper = document.createElement('div');
-    this.props.wrapper.classList.add('wrapper');
     this.props.board = document.createElement('div');
-    this.props.board.classList.add('keyboard');
+    this.props.description = document.createElement('div');
+    this.props.descriptionWrapper = document.createElement('div');
 
-    document.body.append(this.props.textArea);
+    this.props.title.classList.add('title');
+    this.props.wrapper.classList.add('wrapper');
+    this.props.board.classList.add('keyboard');
+    this.props.description.classList.add('description');
+    this.props.descriptionWrapper.classList.add('description__wrapper');
+
+    document.body.append(this.props.title);
     document.body.append(this.props.wrapper);
+    this.props.wrapper.append(this.props.textArea);
     this.props.wrapper.append(this.props.board);
+    document.body.append(this.props.descriptionWrapper);
+    this.props.descriptionWrapper.append(this.props.description);
 
     this.props.textArea.autofocus = true;
     this.props.textArea.focus();
     this.props.selectStart = this.props.textArea.selectionStart;
     this.props.selectEnd = this.props.textArea.selectionEnd;
+
+    this.props.title.textContent = 'RSS Virtual Keyboard';
+    this.props.description.innerHTML = 'Клавиатура созадана на Windows.<br>Горячие клавиши для переключения языка: левые Ctrl+Alt.';
 
     document.addEventListener('keydown', (e) => e.preventDefault());
     document.addEventListener('keydown', (e) => this.downKey(e.code));
@@ -43,7 +60,7 @@ class Keyboard {
     document.addEventListener('mouseup', (e) => this.upKey(e.target.classList[1], e, true));
 
     this.props.textArea.addEventListener('click', (e) => {
-      this.props.selectEnd = e.target.selectionEnd;
+      this.props.selectEnd = e.target.selectionStart;
       this.props.selectStart = e.target.selectionStart;
       this.props.textArea.selectionStart = this.props.selectStart;
       this.props.textArea.selectionEnd = this.props.selectEnd;
@@ -67,6 +84,10 @@ class Keyboard {
     };
     window.addEventListener('beforeunload', setLocalStorage);
     window.addEventListener('load', getLocalStorage);
+  }
+
+  init() {
+    this.start = true;
   }
 
   createKeys(keyObj) {
@@ -404,3 +425,4 @@ class Keyboard {
   }
 }
 const keyboard = new Keyboard();
+keyboard.init();
