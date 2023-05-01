@@ -13,6 +13,7 @@ class Keyboard {
     language: 'eng',
     selectStart: 0,
     selectEnd: 0,
+    keyClicked: null,
   };
 
   eventHanlders = {
@@ -41,10 +42,11 @@ class Keyboard {
     this.props.selectEnd = this.props.textArea.selectionEnd;
 
     document.addEventListener('keydown', (e) => e.preventDefault());
-    document.addEventListener('keyup', (e) => this.upKey(e.code));
     document.addEventListener('keydown', (e) => this.downKey(e.code));
-    document.addEventListener('mousedown', (e) => this.downKey(e.target.classList[1]));
-    document.addEventListener('mouseup', (e) => this.upKey(e.target.classList[1], true));
+    document.addEventListener('keyup', (e) => this.upKey(e.code));
+    document.addEventListener('mousedown', (e) => this.downKey(e.target.classList[1], e, true));
+    document.addEventListener('mouseup', (e) => this.upKey(e.target.classList[1], e, true));
+
     this.props.textArea.addEventListener('click', (e) => {
       this.props.selectEnd = e.target.selectionEnd;
       this.props.textArea.selectionStart = this.props.selectEnd;
@@ -163,10 +165,14 @@ class Keyboard {
     });
   }
 
-  downKey(className) {
+  downKey(className, event, click = false) {
     const textField = this.props.textArea;
+    if (click) {
+      this.props.keyClicked = event.target;
+    }
     textField.focus();
     const keyBtns = document.querySelectorAll('.keyboard__key');
+    console.log(this.props.keyClicked)
 
     keyBtns.forEach((keyElem) => {
       if (keyElem.classList.contains(className)) {
@@ -207,27 +213,27 @@ class Keyboard {
           textField.value = textField.value.substring(0, this.props.selectEnd)
             + textField.value.substring(this.props.selectEnd + 1);
           this.changeCarriagePos(0);
-        } else if (keyElem.textContent === 'Win') {
+        } else if (keyElem.textContent === 'Win' || keyElem.classList.contains('AltRight')) {
           keyElem.classList.add('keyboard__key_active');
-        } else if (keyElem.textContent === 'Ctrl' || keyElem.textContent === 'Alt') {
+        } else if (keyElem.textContent === 'Ctrl' || keyElem.classList.contains('AltLeft')) {
           keyElem.classList.add('keyboard__key_active');
           if (keyElem.textContent === 'Ctrl') {
             this.props.ctrl = true;
             if (this.props.alt) {
               if (this.props.language === 'eng') {
-                this.changeLanguage(this.keyObjRus);
+                this.changeLanguage(keyObjRus);
               } else {
-                this.changeLanguage(this.keyObjEng);
+                this.changeLanguage(keyObjEng);
               }
             }
           }
-          if (keyElem.textContent === 'Alt') {
+          if (keyElem.classList.contains('AltLeft')) {
             this.props.alt = true;
             if (this.props.ctrl) {
               if (this.props.language === 'eng') {
-                this.changeLanguage(this.keyObjRus);
+                this.changeLanguage(keyObjRus);
               } else {
-                this.changeLanguage(this.keyObjEng);
+                this.changeLanguage(keyObjEng);
               }
             }
           }
@@ -247,7 +253,7 @@ class Keyboard {
           const prevPrev = partTextArea.substring(partTextArea.lastIndexOf('\n', this.props.selectStart - prev.length - 1));
 
           console.log(prevPrev.length);
-          console.log(prev.length)
+          console.log(prev.length);
           if (prevPrev.length > prev.length) {
             this.props.selectStart = prevPrev.lastIndexOf('\n');
             this.props.selectEnd = prevPrev.lastIndexOf('\n');
@@ -278,31 +284,36 @@ class Keyboard {
     });
   }
 
-  upKey(className, click = false) {
+  upKey(className, event, click = false) {
     const textField = this.props.textArea;
     textField.focus();
     const keyBtns = document.querySelectorAll('.keyboard__key');
+    const { keyClicked } = this.props;
 
     if (click) {
       keyBtns.forEach((keyElem) => {
-        if (keyElem.textContent === 'CapsLock') {
-          keyElem.classList.toggle('keyboard__key_active', this.props.capsLock);
-        } else if (keyElem.textContent === 'Shift') {
-          this.props.shift = false;
-          keyElem.classList.remove('keyboard__key_active');
-          this.toggleShift();
-        } else if (keyElem.textContent === 'Ctrl' || keyElem.textContent === 'Alt') {
-          keyElem.classList.remove('keyboard__key_active');
-          if (keyElem.textContent === 'Ctrl') {
-            this.props.ctrl = false;
+        if (keyClicked.classList.contains('keyboard__key_active')) {
+          if (keyElem.textContent === 'CapsLock') {
+            keyElem.classList.toggle('keyboard__key_active', this.props.capsLock);
+          } else if (keyElem.textContent === 'Shift') {
+            this.props.shift = false;
+            keyElem.classList.toggle('keyboard__key_active', this.props.shift);
+            this.toggleShift();
+            console.log('superloh');
+          } else if (keyElem.textContent === 'Ctrl' || keyElem.textContent === 'Alt') {
+            keyElem.classList.remove('keyboard__key_active');
+            if (keyElem.textContent === 'Ctrl') {
+              this.props.ctrl = false;
+            }
+            if (keyElem.textContent === 'Alt') {
+              this.props.alt = false;
+            }
+          } else {
+            keyElem.classList.remove('keyboard__key_active');
           }
-          if (keyElem.textContent === 'Alt') {
-            this.props.alt = false;
-          }
-        } else {
-          keyElem.classList.remove('keyboard__key_active');
         }
       });
+      this.props.keyClicked = event.target
     } else {
       keyBtns.forEach((keyElem) => {
         if (keyElem.classList.contains(className)) {
@@ -326,6 +337,7 @@ class Keyboard {
         }
       });
     }
+    this.props.keyClicked = null;
   }
 
   changeLanguage(keyObj) {
