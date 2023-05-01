@@ -21,6 +21,7 @@ class Keyboard {
     this.props.textArea.classList.add('textarea');
     this.props.textArea.rows = 10;
     this.props.textArea.cols = 100;
+    this.props.textArea.wrap = 'hard';
     this.props.wrapper = document.createElement('div');
     this.props.wrapper.classList.add('wrapper');
     this.props.board = document.createElement('div');
@@ -43,8 +44,8 @@ class Keyboard {
 
     this.props.textArea.addEventListener('click', (e) => {
       this.props.selectEnd = e.target.selectionEnd;
+      this.props.selectStart = e.target.selectionStart;
       this.props.textArea.selectionStart = this.props.selectStart;
-      this.props.selectStart = e.target.selectionEnd;
       this.props.textArea.selectionEnd = this.props.selectEnd;
     });
 
@@ -197,8 +198,10 @@ class Keyboard {
           this.changeCarriagePos(1, false);
         } else if (keyElem.textContent === 'Shift') {
           keyElem.classList.add('keyboard__key_active');
+          if (this.props.shift) {
+            return;
+          }
           this.props.shift = true;
-
           this.toggleShift();
         } else if (keyElem.textContent === 'Del') {
           keyElem.classList.add('keyboard__key_active');
@@ -251,34 +254,36 @@ class Keyboard {
 
           const partTextArea = textField.value.substring(0, this.props.selectStart);
           const prev = partTextArea.substring(partTextArea.lastIndexOf('\n'), this.props.selectStart);
-          const prevPrev = partTextArea.substring(partTextArea.lastIndexOf('\n', this.props.selectStart - prev.length - 1));
+          const prevPrev = partTextArea.substring(partTextArea.lastIndexOf('\n', this.props.selectStart - prev.length - 1) + 1);
 
-          console.log(prevPrev.length);
-          console.log(prev.length);
-          if (prevPrev.length > prev.length) {
-            this.props.selectStart = prevPrev.lastIndexOf('\n');
-            this.props.selectEnd = prevPrev.lastIndexOf('\n');
+          if (prev.length > prevPrev.length - prev.length) {
+            this.changeCarriagePos(prev.length, false);
           } else {
-            this.props.selectStart -= prevPrev.length - prev.length;
-            this.props.selectEnd -= prevPrev.length - prev.length;
+            this.changeCarriagePos(prevPrev.length - prev.length + 1, false);
           }
-
-          this.changeCarriagePos();
         } else if (keyElem.classList.contains('ArrowDown')) {
           keyElem.classList.add('keyboard__key_active');
-          const prev = textField.value;
-          for (let i = textField.value.length; i > 0; i -= 1) {
-            this.props.selectStart = prev[i] === '\n' ? this.props.selectStart - (i + 1) : this.props.selectStart;
-            this.props.selectEnd = prev[i] === '\n' ? this.props.selectEnd - (i + 1) : this.props.selectEnd;
+
+          const partTextArea = textField.value.substring(textField.value.lastIndexOf('\n', this.props.selectStart), textField.value.indexOf('\n', this.props.selectStart));
+          const lstIndOf = textField.value.indexOf('\n', this.props.selectStart + 1) !== -1 ? textField.value.indexOf('\n', this.props.selectStart + 1) : textField.value.length;
+
+          if (this.props.selectStart < textField.value.indexOf('\n')) {
+            this.changeCarriagePos(partTextArea.length + 1);
+          } else if (textField.value[this.props.selectStart] !== '\n' && this.props.selectStart > textField.value.indexOf('\n')) {
+            this.changeCarriagePos(partTextArea.length);
+          } else {
+            this.props.selectStart = lstIndOf;
+            this.props.selectEnd = lstIndOf;
           }
-          this.changeCarriagePos();
+
+          textField.selectionStart = this.props.selectStart;
+          textField.selectionEnd = this.props.selectEnd;
         } else {
           keyElem.classList.add('keyboard__key_active');
 
           textField.value = textField.value.substring(0, this.props.selectEnd)
             + keyElem.textContent
             + textField.value.substring(this.props.selectEnd);
-
           this.changeCarriagePos(1);
         }
       }
@@ -381,17 +386,21 @@ class Keyboard {
   }
 
   changeCarriagePos(n, plus = true) {
+    const textField = this.props.textArea;
+
     if (plus) {
-      this.props.selectStart += n;
-      this.props.selectEnd += n;
+      if (this.props.selectStart + n <= textField.value.length) {
+        this.props.selectStart += n;
+        this.props.selectEnd += n;
+      }
     } else if (!plus) {
-      if (this.props.selectStart && this.props.selectEnd) {
+      if (this.props.selectStart - n >= 0) {
         this.props.selectStart -= n;
         this.props.selectEnd -= n;
       }
     }
-    this.props.textArea.selectionStart = this.props.selectStart;
-    this.props.textArea.selectionEnd = this.props.selectEnd;
+    textField.selectionStart = this.props.selectStart;
+    textField.selectionEnd = this.props.selectEnd;
   }
 }
 const keyboard = new Keyboard();
